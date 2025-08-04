@@ -1,0 +1,133 @@
+# config.yml - Fixed Rasa configuration for enhanced NLU and dialogue management
+version: "3.1"
+
+# Recipe specification (required for Rasa 3.x)
+recipe: default.v1
+
+# Language model configuration
+language: en
+
+# Pipeline configuration with enhanced NLU
+pipeline:
+  # Language model - using pre-trained embeddings
+  - name: "SpacyNLP"
+    model: "en_core_web_md"
+    
+  # Tokenizer
+  - name: "SpacyTokenizer"
+    
+  # Featurizers for better text understanding
+  - name: "SpacyFeaturizer"
+    pooling: mean
+    
+  - name: "RegexFeaturizer"
+    
+  - name: "LexicalSyntacticFeaturizer"
+    
+  - name: "CountVectorsFeaturizer"
+    OOV_token: "_OOV_"
+    token_pattern: r"(?u)\b\w+\b"
+    
+  - name: "CountVectorsFeaturizer"
+    analyzer: "char_wb"
+    min_ngram: 1
+    max_ngram: 4
+    OOV_token: "_OOV_"
+    
+  # Entity extractors
+  - name: "SpacyEntityExtractor"
+    dimensions: ["PERSON", "ORG", "GPE", "PRODUCT"]
+    
+  - name: "CRFEntityExtractor"
+    # BILOU flag to improve entity recognition
+    BILOU_flag: True
+    # Features to extract
+    features: [
+      ["low", "title", "upper"],
+      ["bias", "low", "prefix5", "prefix2", "suffix5", "suffix3", "suffix2", "upper", "title", "digit", "pattern", "text_dense_features"],
+      ["low", "title", "upper"]
+    ]
+    
+  - name: "RegexEntityExtractor"
+    case_sensitive: False
+    use_lookup_tables: True
+    use_regexes: True
+    
+  # Synonym mapper
+  - name: "EntitySynonymMapper"
+    
+  # Intent classifier with enhanced settings
+  - name: "DIETClassifier"
+    epochs: 300
+    constrain_similarities: true
+    model_confidence: "softmax"
+    entity_recognition: True
+    intent_classification: True
+    use_masked_language_model: True
+    # Enhanced hyperparameters for better classification
+    hidden_layers_sizes:
+      text: [512, 128]
+      label: [512, 128]
+    number_of_transformer_layers: 2
+    transformer_size: 256
+    # Regularization
+    drop_rate: 0.1
+    drop_rate_attention: 0.0
+    # Training settings
+    batch_size: [64, 256]
+    learning_rate: 0.001
+    
+  # Response selector for better response generation
+  - name: "ResponseSelector"
+    epochs: 100
+    constrain_similarities: true
+    
+  # Fallback classifier to handle out-of-scope queries
+  - name: "FallbackClassifier"
+    threshold: 0.3
+    ambiguity_threshold: 0.1
+
+# Dialogue management policies
+policies:
+  # Memoization policy for exact matches
+  - name: "MemoizationPolicy"
+    max_history: 5
+    
+  # Rule-based policy for handling rules
+  - name: "RulePolicy"
+    core_fallback_threshold: 0.3
+    core_fallback_action_name: "action_default_fallback"
+    enable_fallback_prediction: True
+    restrict_rules: True
+    check_for_contradictions: True
+    
+  # Transformer-based policy for better predictions
+  - name: "TEDPolicy"
+    max_history: 5
+    epochs: 100
+    constrain_similarities: true
+    model_confidence: "softmax"
+    # Enhanced hyperparameters
+    hidden_layers_sizes:
+      text: [256, 128]
+      label: [256, 128]
+    number_of_transformer_layers: 2
+    transformer_size: 256
+    # Regularization
+    drop_rate: 0.1
+    drop_rate_attention: 0.0
+    # Training settings
+    batch_size: [64, 256]
+    learning_rate: 0.001
+    # Entity recognition in dialogue
+    entity_recognition: True
+    intent_classification: True
+    use_masked_language_model: True
+    
+  # Unexpected intent policy
+  - name: "UnexpecTEDIntentPolicy"
+    max_history: 5
+    epochs: 50
+
+# Assistant configuration
+assistant_id: "enhanced_topup_assistant"

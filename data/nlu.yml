@@ -1,0 +1,254 @@
+# nlu.yml - Focused on Topup Intent Only
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - hello there
+    - good morning
+    - good evening
+    - hey there
+    - goodmorning
+    - goodevening
+    - good afternoon
+    - how are you 
+    - how do you do
+    - helo
+    - hiiiiii
+    - what's up
+    - hey there
+    - yo
+    - hi there, can you help?
+    - greetings!
+    - hiii
+    - Hello! 😃
+    - Hey! How are you?
+    - Good day!
+
+- intent: goodbye
+  examples: |
+    - goodbye
+    - bye
+    - see you later
+    - bye bye
+    - good night
+    - have a nice day
+    - see you around
+    - cya
+    - take care
+
+- intent: affirm
+  examples: |
+    - yes
+    - y
+    - yeah
+    - correct
+    - that's right
+    - indeed
+    - of course
+    - that sounds good
+    - proceed
+    - confirm
+    - go ahead
+    - continue
+
+- intent: deny
+  examples: |
+    - no
+    - n
+    - nope
+    - never
+    - I don't think so
+    - don't like that
+    - no way
+    - not really
+    - cancel
+    - stop
+    - abort
+
+- intent: bot_challenge
+  examples: |
+    - are you a bot?
+    - are you a human?
+    - am I talking to a bot?
+    - who are you?
+    - what are you?
+    - tell me about yourself
+
+- intent: ask_help
+  examples: |
+    - help
+    - I need help
+    - can you help me
+    - what can you do
+    - how does this work
+    - guide me
+    - support
+    - assistance
+    - what are your features
+
+# FOCUSED TOPUP INTENT - Only for user's own wallet/account
+- intent: topup_wallet
+  examples: |
+    - I want to topup [100](amount) to my wallet
+    - load my wallet with [100 rupees](amount)
+    - Add [50](amount) to my account
+    - Top up [200 RM](amount) to my wallet
+    - I want to add [300](amount) ringgit to my wallet
+    - Load [500](amount) into my account
+    - Please topup [75](amount) to my wallet
+    - Add [1000 RM](amount) to my account
+    - I need to topup [250](amount) ringgit
+    - Load [150](amount) into my wallet
+    - Deposit [800](amount) to my account
+    - Add money [400](amount) to my wallet
+    - I want to add [100](amount) from bank to my wallet
+    - Topup [500 ringgit](amount) to my account
+    - Load [350](amount) from my bank account
+    - Add [750 RM](amount) from bank to wallet
+    - I need to load [600](amount) into my account
+    - Put [200](amount) into my wallet
+    - Add [120](amount) to my wallet balance
+    - I want to deposit [950](amount) to my account
+    - Load [80 RM](amount) in my wallet
+    - Add funds [1500](amount) to my account
+    - I need to add [45](amount) ringgit to wallet
+    - Topup my wallet with [300](amount)
+    - Load my account with [700](amount)
+    - Add [180 RM](amount) to wallet
+    - I want to put [550](amount) in my account
+    - Deposit [25](amount) ringgit to wallet
+    - Load [900](amount) from bank into wallet
+    - Add [65 RM](amount) from my bank
+    - I need to topup my wallet [400](amount)
+    - Put [800 ringgit](amount) in my account
+    - Add money to my wallet
+    - I want to topup my account
+    - Load money to my wallet
+    - Add funds to my account
+    - I need to add money
+    - Topup my wallet
+    - Load my account
+    - Add money from bank
+    - I want to deposit money
+    - Put money in wallet
+    - Add funds from bank account
+    - I need to load money
+    - Topup account from bank
+    - Add money via bank transfer
+    - Load wallet from my bank
+    - I want to add money to wallet
+    - Deposit money to my account
+    - Add cash to wallet
+    - Load funds to account
+    - I need to add funds
+    - Topup wallet from bank
+    - Add balance to account
+    - Load money from FPX
+    - I want to increase wallet balance
+    - Add money using bank
+    - Topup using bank transfer
+    - Load account via FPX
+    - I want to top up my wallet
+    - add money to my account
+    - could you help me add funds?
+    - topup cash, please
+    - need to recharge my wallet
+    - put RM 150 in
+    - can I deposit money?
+    - wallet topup for 200
+    - send money to my wallet
+    - I need to add RM 50
+    - give me a wallet top-up
+
+
+- intent: provide_information
+  examples: |
+    - [SBI Bank](bank_name)
+    - [ABC Bank](bank_name)
+    - [Maybank](bank_name)
+    - [CIMB Bank](bank_name)
+    - [Public Bank](bank_name)
+    - [savings](account_type) account
+    - [current](account_type) account
+    - my username is [john123](fpx_username)
+    - [password123](fpx_password)
+    - [user456](fpx_username) is my username
+    - my password is [mypass789](fpx_password)
+    - username [testuser](fpx_username)
+    - password [securepass](fpx_password)
+    - [100](amount)
+    - [50.50](amount)
+    - [1000](amount) ringgit
+    - [RM 250](amount)
+    - [500 RM](amount)
+    - select [SBI Bank](bank_name)
+    - choose [Maybank](bank_name)
+    - I want [ABC Bank](bank_name)
+    - use [CIMB Bank](bank_name)
+    - [Public Bank](bank_name) please
+    - bank is [SBI Bank](bank_name)
+    - I want to use [SBI Bank](bank_name)
+    - transfer money via [Maybank](bank_name)
+    - I'd like to top up from [CIMB](bank_name)
+    - use [Public Bank](bank_name) for payment
+    - add money using [ABC Bank](bank_name)
+    - can you use [S.B.I](bank_name)
+    - bank is [may bank](bank_name)  # space typo
+    - top up using [CIMB Bank](bank_name)
+
+# Add regex patterns for better entity extraction
+regex:
+- name: bank_pattern
+  examples: |
+    - (SBI|ABC|Maybank|CIMB|Public)\s*Bank
+    - Bank\s*(SBI|ABC|Maybank|CIMB|Public)
+    - (SBI|ABC|Maybank|CIMB|Public)
+
+- name: bank_pattern
+  examples: |
+    - (SBI|ABC|Maybank|CIMB|Public)\s*Bank
+    - Bank\s*(SBI|ABC|Maybank|CIMB|Public)
+
+- name: account_type_pattern
+  examples: |
+    - (savings?|current)\s*account
+    - account\s*(savings?|current)
+- name: fpx_username
+  pattern: '^\d{10}$'  # exactly 10 digits
+- name: bank_name
+  pattern: "SBI|Maybank|CIMB|Public Bank|ABC Bank"
+
+# Synonyms for currency
+synonyms:
+  - synonym: RM
+    examples: |
+      - ringgit
+      - MYR
+      - rm
+      - RM
+      - Ringgit Malaysia
+
+  - synonym: SBI Bank
+    examples: |
+      - SBI
+      - State Bank of India
+      - sbi bank
+
+  - synonym: ABC Bank
+    examples: |
+      - ABC
+      - abc bank
+
+  - synonym: savings
+    examples: |
+      - saving
+      - savings account
+      - saving account
+
+  - synonym: current
+    examples: |
+      - current account

@@ -1,0 +1,158 @@
+[
+  {
+    "text": "Deposit 25 ringgit to wallet",
+    "entities": [
+      {
+        "start": 8,
+        "end": 10,
+        "value": "25",
+        "entity": "amount"
+      }
+    ],
+    "predicted_entities": [
+      {
+        "entity": "amount",
+        "start": 8,
+        "end": 18,
+        "confidence_entity": 0.7110905647277832,
+        "value": "25 ringgit",
+        "extractor": "DIETClassifier"
+      }
+    ]
+  },
+  {
+    "text": "put RM 150 in",
+    "entities": [],
+    "predicted_entities": [
+      {
+        "entity": "amount",
+        "start": 4,
+        "end": 6,
+        "confidence_entity": 0.6138864755630493,
+        "value": "RM",
+        "extractor": "DIETClassifier"
+      },
+      {
+        "entity": "amount",
+        "start": 7,
+        "end": 10,
+        "confidence_entity": 0.6723598837852478,
+        "value": "150",
+        "extractor": "DIETClassifier",
+        "processors": [
+          "EntitySynonymMapper"
+        ]
+      }
+    ]
+  },
+  {
+    "text": "wallet topup for 200",
+    "entities": [],
+    "predicted_entities": [
+      {
+        "entity": "amount",
+        "start": 17,
+        "end": 20,
+        "confidence_entity": 0.9982010126113892,
+        "value": "200",
+        "extractor": "DIETClassifier",
+        "processors": [
+          "EntitySynonymMapper"
+        ]
+      }
+    ]
+  },
+  {
+    "text": "I need to add RM 50",
+    "entities": [],
+    "predicted_entities": [
+      {
+        "entity": "amount",
+        "start": 14,
+        "end": 16,
+        "confidence_entity": 0.7806112766265869,
+        "value": "RM",
+        "extractor": "DIETClassifier"
+      },
+      {
+        "entity": "amount",
+        "start": 17,
+        "end": 19,
+        "confidence_entity": 0.9005608558654785,
+        "value": "50",
+        "extractor": "DIETClassifier",
+        "processors": [
+          "EntitySynonymMapper"
+        ]
+      }
+    ]
+  },
+  {
+    "text": "I'd like to top up from CIMB",
+    "entities": [
+      {
+        "start": 24,
+        "end": 28,
+        "value": "CIMB",
+        "entity": "bank_name"
+      }
+    ],
+    "predicted_entities": []
+  },
+  {
+    "text": "use Public Bank for payment",
+    "entities": [
+      {
+        "start": 4,
+        "end": 15,
+        "value": "Public Bank",
+        "entity": "bank_name"
+      }
+    ],
+    "predicted_entities": [
+      {
+        "entity": "bank_name",
+        "start": 4,
+        "end": 15,
+        "confidence_entity": 0.9975250363349915,
+        "value": "Public Bank",
+        "extractor": "DIETClassifier",
+        "processors": [
+          "EntitySynonymMapper"
+        ]
+      },
+      {
+        "entity": "recipient_type",
+        "start": 20,
+        "end": 27,
+        "confidence_entity": 0.6534730792045593,
+        "value": "payment",
+        "extractor": "DIETClassifier"
+      }
+    ]
+  },
+  {
+    "text": "can you use S.B.I",
+    "entities": [
+      {
+        "start": 12,
+        "end": 17,
+        "value": "S.B.I",
+        "entity": "bank_name"
+      }
+    ],
+    "predicted_entities": []
+  },
+  {
+    "text": "bank is may bank  # space typo",
+    "entities": [
+      {
+        "start": 8,
+        "end": 16,
+        "value": "may bank",
+        "entity": "bank_name"
+      }
+    ],
+    "predicted_entities": []
+  }
+]

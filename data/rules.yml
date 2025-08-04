@@ -1,0 +1,161 @@
+version: "3.1"
+
+rules:
+
+  # Basic conversation rules
+  - rule: Say goodbye anytime the user says goodbye
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye
+
+  - rule: Say hello anytime the user greets
+    steps:
+      - intent: greet
+      - action: utter_greet
+
+  - rule: Provide help when asked
+    steps:
+      - intent: ask_help
+      - action: utter_help
+
+  - rule: Respond to bot challenge
+    steps:
+      - intent: bot_challenge
+      - action: utter_iamabot
+
+  # Enhanced intent classification followed by starting topup_form
+  - rule: Enhanced intent classification for topup_wallet intent
+    steps:
+      - intent: topup_wallet
+      - action: action_enhanced_intent_classifier
+      - action: action_set_transaction_type_topup
+      - action: topup_form
+      - active_loop: topup_form
+
+  # Submit topup_form: close form and ask confirmation for topup details
+  - rule: Submit topup_form and ask for confirmation
+    condition:
+      - active_loop: topup_form
+    steps:
+      - action: topup_form
+      - active_loop: null
+      - action: utter_topup_details_confirm
+
+  # Handle user providing bank_name within topup_form
+  - rule: Continue collecting bank_name in topup_form
+    condition:
+      - active_loop: topup_form
+      - slot_was_set:
+          - requested_slot: bank_name
+    steps:
+      - intent: provide_information
+      - action: topup_form
+
+  # Handle user affirming topup confirmation → start fpx_authentication_form
+  - rule: User affirms topup confirmation
+    condition:
+      - slot_was_set:
+          - confirm_topup: affirm
+    steps:
+      - intent: affirm
+      - action: fpx_authentication_form
+      - active_loop: fpx_authentication_form
+
+  # Handle user denying topup confirmation → cancel flow
+  - rule: User denies topup confirmation
+    condition:
+      - slot_was_set:
+          - confirm_topup: deny
+    steps:
+      - intent: deny
+      - action: action_reset_slots
+      - action: utter_cancel
+
+  # Submit fpx_authentication_form: close form and authenticate FPX
+  - rule: Submit fpx_authentication_form and authenticate
+    condition:
+      - active_loop: fpx_authentication_form
+    steps:
+      - action: fpx_authentication_form
+      - active_loop: null
+      - action: action_authenticate_fpx
+
+  # Handle successful FPX authentication → start account_selection_form
+  - rule: Successful FPX authentication
+    condition:
+      - slot_was_set:
+          - fpx_authenticated: true
+    steps:
+      - action: utter_fpx_authentication_success
+      - action: account_selection_form
+      - active_loop: account_selection_form
+
+  # Handle failed FPX authentication → notify user and reset slots
+  - rule: Failed FPX authentication
+    condition:
+      - slot_was_set:
+          - fpx_authenticated: false
+    steps:
+      - action: utter_fpx_authentication_failed
+      - action: action_reset_slots
+
+  # Submit account_selection_form and ask final confirmation or start processing
+  - rule: Submit account_selection_form and process topup
+    condition:
+      - active_loop: account_selection_form
+    steps:
+      - action: account_selection_form
+      - active_loop: null
+      - action: utter_transaction_progress
+      - action: action_execute_topup
+
+  # Handle topup success message and reset slots
+  - rule: Handle completed topup transaction
+    condition:
+      - slot_was_set:
+          - transaction_status: completed
+    steps:
+      - action: utter_topup_success
+      - action: action_reset_slots
+
+  # Handle pending topup transaction and reset slots
+  - rule: Handle pending topup transaction
+    condition:
+      - slot_was_set:
+          - transaction_status: pending
+    steps:
+      - action: utter_topup_pending
+      - action: action_reset_slots
+
+  # Handle failed topup transaction and reset slots
+  - rule: Handle failed topup transaction
+    condition:
+      - slot_was_set:
+          - transaction_status: failed
+    steps:
+      - action: utter_topup_failed
+      - action: action_reset_slots
+
+  # Cancel topup at any time during topup_form
+  - rule: Cancel topup during initial form
+    condition:
+      - active_loop: topup_form
+    steps:
+      - intent: deny
+      - action: utter_cancel
+      - action: action_reset_slots
+
+  # Cancel topup during account selection form
+  - rule: Cancel topup during account_selection_form
+    condition:
+      - active_loop: account_selection_form
+    steps:
+      - intent: deny
+      - action: utter_cancel
+      - action: action_reset_slots
+
+  # NLU fallback handling
+  - rule: NLU fallback handling
+    steps:
+      - intent: nlu_fallback
+      - action: utter_did_not_understand

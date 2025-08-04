@@ -1,0 +1,82 @@
+[
+  {
+    "text": "what's up",
+    "intent": "greet",
+    "intent_prediction": {
+      "name": "ask_help",
+      "confidence": 0.9845150709152222
+    }
+  },
+  {
+    "text": "yo",
+    "intent": "greet",
+    "intent_prediction": {
+      "name": "affirm",
+      "confidence": 0.803203821182251
+    }
+  },
+  {
+    "text": "greetings!",
+    "intent": "greet",
+    "intent_prediction": {
+      "name": "affirm",
+      "confidence": 0.9164204001426697
+    }
+  },
+  {
+    "text": "Good day!",
+    "intent": "greet",
+    "intent_prediction": {
+      "name": "goodbye",
+      "confidence": 0.9969509840011597
+    }
+  },
+  {
+    "text": "put RM 150 in",
+    "intent": "topup_wallet",
+    "intent_prediction": {
+      "name": "provide_information",
+      "confidence": 0.5993344783782959
+    }
+  },
+  {
+    "text": "transfer money via Maybank",
+    "intent": "provide_information",
+    "intent_prediction": {
+      "name": "topup_wallet",
+      "confidence": 1.0
+    }
+  },
+  {
+    "text": "I'd like to top up from CIMB",
+    "intent": "provide_information",
+    "intent_prediction": {
+      "name": "topup_wallet",
+      "confidence": 1.0
+    }
+  },
+  {
+    "text": "add money using ABC Bank",
+    "intent": "provide_information",
+    "intent_prediction": {
+      "name": "topup_wallet",
+      "confidence": 1.0
+    }
+  },
+  {
+    "text": "can you use S.B.I",
+    "intent": "provide_information",
+    "intent_prediction": {
+      "name": "ask_help",
+      "confidence": 0.956047773361206
+    }
+  },
+  {
+    "text": "top up using CIMB Bank",
+    "intent": "provide_information",
+    "intent_prediction": {
+      "name": "topup_wallet",
+      "confidence": 0.9981865286827087
+    }
+  }
+]

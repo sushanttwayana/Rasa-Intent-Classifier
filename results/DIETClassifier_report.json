@@ -1,0 +1,63 @@
+{
+  "fpx_password": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 3,
+    "confused_with": {}
+  },
+  "recipient_type": {
+    "precision": 0.8,
+    "recall": 1.0,
+    "f1-score": 0.888888888888889,
+    "support": 4,
+    "confused_with": {}
+  },
+  "bank_name": {
+    "precision": 1.0,
+    "recall": 0.8787878787878788,
+    "f1-score": 0.9354838709677419,
+    "support": 33,
+    "confused_with": {}
+  },
+  "amount": {
+    "precision": 0.8928571428571429,
+    "recall": 1.0,
+    "f1-score": 0.9433962264150945,
+    "support": 50,
+    "confused_with": {}
+  },
+  "fpx_username": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 3,
+    "confused_with": {}
+  },
+  "account_type": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 2,
+    "confused_with": {}
+  },
+  "micro avg": {
+    "precision": 0.9285714285714286,
+    "recall": 0.9578947368421052,
+    "f1-score": 0.9430051813471502,
+    "support": 95
+  },
+  "macro avg": {
+    "precision": 0.9488095238095239,
+    "recall": 0.9797979797979798,
+    "f1-score": 0.9612948310452877,
+    "support": 95
+  },
+  "weighted avg": {
+    "precision": 0.9351879699248121,
+    "recall": 0.9578947368421052,
+    "f1-score": 0.943119311771008,
+    "support": 95
+  },
+  "accuracy": 0.982839313572543
+}

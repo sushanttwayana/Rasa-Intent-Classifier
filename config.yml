@@ -1,0 +1,60 @@
+# config.yml 
+version: "3.1"
+recipe: default.v1
+language: en
+
+  - name: WhitespaceTokenizer
+  - name: RegexFeaturizer
+  - name: LexicalSyntacticFeaturizer
+  - name: CountVectorsFeaturizer
+    OOV_token: "[UNK]"
+    use_lemma: true
+  - name: DIETClassifier
+    epochs: 200
+    constrain_similarities: true
+    entity_recognition: true
+    random_seed: 42
+    learning_rate: 0.003
+  - name: FallbackClassifier
+    threshold: 0.4  # Lower threshold for more flexibility
+    ambiguity_threshold: 0.1
+
+
+
+pipeline:
+  - name: WhitespaceTokenizer
+  - name: RegexFeaturizer
+  - name: LexicalSyntacticFeaturizer
+  - name: CountVectorsFeaturizer
+    OOV_token: "[UNK]"
+    use_lemma: true
+  - name: DIETClassifier
+    epochs: 200
+    constrain_similarities: true
+    entity_recognition: true
+    random_seed: 42
+    learning_rate: 0.003
+  - name: EntitySynonymMapper
+  - name: ResponseSelector
+    epochs: 100
+  - name: FallbackClassifier
+    threshold: 0.4
+    ambiguity_threshold: 0.1
+  - name: CountVectorsFeaturizer
+    analyzer: char_wb
+    min_ngram: 1
+    max_ngram: 4
+    use_augmentation: true
+    augmentation_factor: 50
+
+policies:
+  - name: MemoizationPolicy
+  - name: RulePolicy
+  - name: UnexpecTEDIntentPolicy
+    max_history: 5
+    epochs: 100
+  - name: TEDPolicy
+    max_history: 5
+    epochs: 100
+
+assistant_id: enhanced_topup_assistant

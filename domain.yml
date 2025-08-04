@@ -1,0 +1,269 @@
+# Fixed domain.yml - Enhanced Topup Flow with corrected configurations
+version: "3.1"
+
+intents:
+  - topup_wallet
+  - affirm
+  - deny
+  - goodbye
+  - greet
+  - provide_information
+  - ask_help
+  - bot_challenge
+  - nlu_fallback
+
+entities:
+  - amount
+  - bank_name
+  - account_type
+  - fpx_username
+  - fpx_password
+
+slots:
+  transaction_type:
+    type: categorical
+    values:
+      - topup
+    influence_conversation: true
+    mappings:
+      - type: custom
+      
+  amount:
+    type: float
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: amount
+      - type: from_text # fallback if entity is not detected, user whole
+        
+  bank_name:
+    type: categorical
+    values:
+      - "SBI Bank"
+      - "ABC Bank" 
+      - "Maybank"
+      - "CIMB Bank"
+      - "Public Bank"
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: bank_name
+      - type: from_text
+        
+  account_type:
+    type: categorical
+    values:
+      - Saving
+      - Current
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: account_type
+      - type: custom
+        
+  fpx_username:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: fpx_username
+      - type: from_text
+        
+  fpx_password:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: fpx_password
+      - type: from_text
+        
+  fpx_authenticated:
+    type: bool
+    influence_conversation: true
+    initial_value: false
+    mappings:
+      - type: custom
+        
+  transaction_status:
+    type: categorical
+    values:
+      - pending
+      - completed
+      - failed
+    influence_conversation: true
+    mappings:
+      - type: custom
+      
+  transaction_reference:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+  
+  confirm_topup:
+    type: categorical
+    values:
+      - affirm
+      - deny
+    influence_conversation: false
+    mappings:
+      - type: from_intent
+        intent: affirm
+        value: affirm
+      - type: from_intent
+        intent: deny
+        value: deny
+
+  confirm_final:
+    type: categorical
+    values:
+      - affirm
+      - deny
+    # influence_conversation: false
+    mappings:
+      - type: from_intent
+        intent: affirm
+        value: affirm
+      - type: from_intent
+        intent: deny
+        value: deny
+
+responses:
+  # Greeting responses
+  utter_greet:
+    - text: "Hello! I'm here to help you with your wallet topup. How can I assist you today?"
+    - text: "Hi there! Ready to help you add money to your wallet. What would you like to do?"
+    
+  # Topup flow responses
+  utter_ask_amount:
+    - text: "How much would you like to topup to your wallet? (Minimum: RM 10, Maximum: RM 10,000)"
+    - text: "Please specify the amount you want to add to your wallet:"
+    
+  utter_ask_bank_name:
+    - text: "Which bank would you like to use for the topup?"
+      buttons:
+        - title: "SBI Bank"
+          payload: "SBI Bank"
+        - title: "ABC Bank"
+          payload: "ABC Bank"
+        - title: "Maybank"
+          payload: "Maybank"
+        - title: "CIMB Bank" 
+          payload: "CIMB Bank"
+        - title: "Public Bank"
+          payload: "Public Bank"
+          
+  utter_ask_account_type:
+    - text: "Which account type would you like to use?"
+      buttons:
+        - title: "Savings Account"
+          payload: "savings"
+        - title: "Current Account"
+          payload: "current"
+          
+  utter_topup_details_confirm:
+    - text: "Please confirm your topup details:\n💰 Amount: RM {amount}\n🏦 Bank: {bank_name}\n\nShould I proceed with this topup?"
+      buttons:
+        - title: "✅ Yes, proceed"
+          payload: "/affirm"
+        - title: "❌ Cancel"
+          payload: "/deny"
+          
+  utter_ask_fpx_username:
+    - text: "🔐 Please provide your FPX username for bank authentication:"
+    
+  utter_ask_fpx_password:
+    - text: "🔐 Please enter your FPX password:"
+    
+  utter_fpx_authentication_success:
+    - text: "✅ FPX authentication successful! Proceeding with the transaction..."
+    
+  utter_fpx_authentication_failed:
+    - text: "❌ FPX authentication failed. Please check your credentials and try again."
+    
+  utter_topup_processing:
+    - text: "⏳ Processing your topup request... Please wait."
+    
+  utter_topup_success:
+    - text: "🎉 Topup Successful!\n💰 Amount: RM {amount}\n🏦 Bank: {bank_name}\n📊 Account: {account_type}\n📋 Transaction ID: {transaction_reference}\n✅ Status: Completed"
+    - text: "✅ Great! Your wallet has been topped up with RM {amount} from {bank_name}.\nTransaction Reference: {transaction_reference}"
+    
+  utter_topup_pending:
+    - text: "⏳ Topup is being processed...\n💰 Amount: RM {amount}\n🏦 Bank: {bank_name}\n📊 Account: {account_type}\n📋 Transaction ID: {transaction_reference}\n🔄 Status: Pending\n\nYou'll receive a notification once completed."
+
+  utter_topup_failed:
+    - text: "❌ Topup failed. Please try again later or contact customer support."
+    
+  utter_cancel:
+    - text: "❌ Topup cancelled. No charges have been made."
+    - text: "Transaction cancelled as requested. Is there anything else I can help you with?"
+    
+  utter_goodbye:
+    - text: "Thank you for using our service! Have a great day! 👋"
+    - text: "Goodbye! Feel free to return anytime for your wallet needs! 😊"
+    
+  utter_help:
+    - text: "I can help you topup money to your wallet from your bank account via FPX.\n\nJust say something like:\n• 'I want to topup RM 100'\n• 'Add money to my wallet'\n• 'Topup 50 ringgit'"
+    
+  utter_did_not_understand:
+    - text: "I'm not sure I understood that. Could you please rephrase?\n\nFor wallet topup, try saying: 'I want to topup RM 100'"
+    
+  utter_iamabot:
+    - text: "I'm your helpful wallet assistant bot! I can help you topup money to your wallet from your bank account. 🤖💳"
+
+  utter_ask_confirm_topup:
+  - text: "Please confirm your topup details:\n💰 Amount: RM {amount}\n🏦 Bank: {bank_name}\n\nShould I proceed with this topup?"
+  - buttons:
+      - title: "✅ Yes"
+        payload: "/affirm"
+      - title: "❌ No"
+        payload: "/deny"
+
+  utter_ask_confirm_final:
+    - text: "Do you want to proceed with the topup now?"
+    - buttons:
+        - title: "✅ Yes"
+          payload: "/affirm"
+        - title: "❌ Cancel"
+          payload: "/deny"
+
+  utter_cancel:
+    - text: "❌ Topup cancelled. No charges have been made."
+    - text: "Transaction cancelled as requested. Is there anything else I can help you with?"
+    
+  utter_transaction_progress:
+    - text: "⏳ Processing your topup request... Please wait."
+
+
+session_config:
+  session_expiration_time: 30
+  carry_over_slots_to_new_session: false
+
+forms:
+  topup_form:
+    required_slots:
+      - amount
+      - bank_name
+      - confirm_topup # slot to capture confirmation (yes/no)
+      
+  fpx_authentication_form:
+    required_slots:
+      - fpx_username
+      - fpx_password
+      
+  account_selection_form:
+    required_slots:
+      - account_type
+      - confirm_final # slot for final confirmation (Y/N)
+
+actions:
+  - action_enhanced_intent_classifier
+  - validate_topup_form_enhanced
+  - validate_fpx_authentication_form
+  - validate_account_selection_form
+  - action_set_transaction_type_topup
+  - action_authenticate_fpx
+  - action_execute_topup
+  - action_reset_slots
+  - action_session_start
+  - action_default_fallback

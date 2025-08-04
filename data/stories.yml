@@ -1,0 +1,264 @@
+version: "3.1"
+
+stories:
+
+  # Story 1: Complete successful topup flow with amount specified
+  - story: successful topup with amount specified
+    steps:
+      - intent: topup_wallet
+        entities:
+          - amount: 100
+      - action: action_enhanced_intent_classifier
+      - action: action_set_transaction_type_topup
+      - action: topup_form
+      - active_loop: topup_form
+      - slot_was_set:
+          - requested_slot: bank_name
+      - intent: provide_information
+        entities:
+          - bank_name: "SBI Bank"
+      - slot_was_set:
+          - bank_name: "SBI Bank"
+      - action: topup_form
+      - active_loop: null
+      - action: utter_topup_details_confirm
+      - intent: affirm
+      - action: fpx_authentication_form
+      - active_loop: fpx_authentication_form
+      - slot_was_set:
+          - requested_slot: fpx_username
+      - intent: provide_information
+        entities:
+          - fpx_username: "john123"
+      - slot_was_set:
+          - fpx_username: "john123"
+      - slot_was_set:
+          - requested_slot: fpx_password
+      - intent: provide_information
+        entities:
+          - fpx_password: "password123"
+      - slot_was_set:
+          - fpx_password: "password123"
+      - action: fpx_authentication_form
+      - active_loop: null
+      - action: action_authenticate_fpx
+      - slot_was_set:
+          - fpx_authenticated: true
+      - action: account_selection_form
+      - active_loop: account_selection_form
+      - slot_was_set:
+          - requested_slot: account_type
+      - intent: provide_information
+        entities:
+          - account_type: "saving"
+      - slot_was_set:
+          - account_type: "saving"
+      - action: account_selection_form
+      - active_loop: null
+      - action: utter_transaction_progress
+      - action: action_execute_topup
+      - action: utter_topup_success
+
+  # Story 2: Topup without amount specified initially
+  - story: topup without amount
+    steps:
+      - intent: topup_wallet
+      - action: action_enhanced_intent_classifier
+      - action: action_set_transaction_type_topup
+      - action: topup_form
+      - active_loop: topup_form
+      - slot_was_set:
+          - requested_slot: amount
+      - intent: provide_information
+        entities:
+          - amount: 250
+      - slot_was_set:
+          - amount: 250
+      - slot_was_set:
+          - requested_slot: bank_name
+      - intent: provide_information
+        entities:
+          - bank_name: "Maybank"
+      - slot_was_set:
+          - bank_name: "Maybank"
+      - action: topup_form
+      - active_loop: null
+      - action: utter_topup_details_confirm
+      - intent: affirm
+      - action: fpx_authentication_form
+      - active_loop: fpx_authentication_form
+      - slot_was_set:
+          - requested_slot: fpx_username
+      - intent: provide_information
+        entities:
+          - fpx_username: "user123"
+      - slot_was_set:
+          - fpx_username: "user123"
+      - slot_was_set:
+          - requested_slot: fpx_password
+      - intent: provide_information
+        entities:
+          - fpx_password: "pass12345"
+      - slot_was_set:
+          - fpx_password: "pass12345"
+      - action: fpx_authentication_form
+      - active_loop: null
+      - action: action_authenticate_fpx
+      - slot_was_set:
+          - fpx_authenticated: true
+      - action: account_selection_form
+      - active_loop: account_selection_form
+      - slot_was_set:
+          - requested_slot: account_type
+      - intent: provide_information
+        entities:
+          - account_type: "current"
+      - slot_was_set:
+          - account_type: "current"
+      - action: account_selection_form
+      - active_loop: null
+      - action: utter_transaction_progress
+      - action: action_execute_topup
+      - action: utter_topup_success
+
+  # Story 3: User cancels topup after first confirmation
+  - story: user cancels topup after first confirmation
+    steps:
+      - intent: topup_wallet
+        entities:
+          - amount: 500
+      - action: action_enhanced_intent_classifier
+      - action: action_set_transaction_type_topup
+      - action: topup_form
+      - active_loop: topup_form
+      - slot_was_set:
+          - requested_slot: bank_name
+      - intent: provide_information
+        entities:
+          - bank_name: "CIMB Bank"
+      - slot_was_set:
+          - bank_name: "CIMB Bank"
+      - action: topup_form
+      - active_loop: null
+      - action: utter_topup_details_confirm
+      - intent: deny
+      - action: action_reset_slots
+      - action: utter_cancel
+
+  # Story 4: FPX authentication failure
+  - story: fpx authentication failure
+    steps:
+      - intent: topup_wallet
+        entities:
+          - amount: 150
+      - action: action_enhanced_intent_classifier
+      - action: action_set_transaction_type_topup
+      - action: topup_form
+      - active_loop: topup_form
+      - slot_was_set:
+          - requested_slot: bank_name
+      - intent: provide_information
+        entities:
+          - bank_name: "Public Bank"
+      - slot_was_set:
+          - bank_name: "Public Bank"
+      - action: topup_form
+      - active_loop: null
+      - action: utter_topup_details_confirm
+      - intent: affirm
+      - action: fpx_authentication_form
+      - active_loop: fpx_authentication_form
+      - slot_was_set:
+          - requested_slot: fpx_username
+      - intent: provide_information
+        entities:
+          - fpx_username: "wronguser"
+      - slot_was_set:
+          - requested_slot: fpx_password
+      - intent: provide_information
+        entities:
+          - fpx_password: "wrongpass"
+      - action: fpx_authentication_form
+      - active_loop: null
+      - action: action_authenticate_fpx
+      - slot_was_set:
+          - fpx_authenticated: false
+      - action: utter_fpx_authentication_failed
+
+  # Story 5: User asks for help
+  - story: user asks for help
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: ask_help
+      - action: utter_help
+
+  # Story 6: User says goodbye
+  - story: user says goodbye
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: goodbye
+      - action: utter_goodbye
+
+  # Story 7: Bot challenge response
+  - story: bot challenge story
+    steps:
+      - intent: bot_challenge
+      - action: utter_iamabot
+
+  # Story 8: Wallet topup flow with chained forms and final confirmation
+  - story: wallet topup flow with chained forms
+    steps:
+      - intent: topup_wallet
+      - action: action_enhanced_intent_classifier
+      - action: action_set_transaction_type_topup
+      - action: topup_form
+      - active_loop: topup_form
+      - slot_was_set:
+          - confirm_topup: affirm
+      - action: fpx_authentication_form
+      - active_loop: fpx_authentication_form
+      - slot_was_set:
+          - fpx_username: _
+          - fpx_password: _
+      - action: action_authenticate_fpx
+      - slot_was_set:
+          - fpx_authenticated: true
+      - action: account_selection_form
+      - active_loop: account_selection_form
+      - slot_was_set:
+          - confirm_final: affirm
+      - action: utter_transaction_progress
+      - action: action_execute_topup
+      - action: utter_topup_success
+
+rules:
+
+  # Rule: Cancel topup at first confirmation
+  - rule: cancel topup at first confirmation
+    condition:
+      - active_loop: topup_form
+    steps:
+      - intent: deny
+      - action: utter_cancel
+      - action: action_reset_slots
+
+  # Rule: Cancel topup at final confirmation
+  - rule: cancel topup at final confirmation
+    condition:
+      - active_loop: account_selection_form
+    steps:
+      - intent: deny
+      - action: utter_cancel
+      - action: action_reset_slots
+
+  # Rule: Complete topup after final confirmation (handling in rule rather than story to avoid duplication)
+  - rule: complete topup after final confirmation
+    condition:
+      - slot_was_set:
+          - confirm_final: affirm
+    steps:
+      - action: utter_transaction_progress
+      - action: action_execute_topup
+      - action: utter_topup_success
