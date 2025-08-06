@@ -1,0 +1,157 @@
+# ------------------rules.yml-----------------------
+version: "3.1"
+
+rules:
+  - rule: Say goodbye anytime the user says goodbye
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye
+
+  - rule: Say 'I am a bot' anytime the user challenges
+    steps:
+      - intent: bot_challenge
+      - action: utter_iamabot
+
+  # ====== GLOBAL RULES ======
+  # Modified: Deny within an active form/transaction context.
+  # This rule will catch 'deny' when a specific transaction type has been set,
+  # indicating a desire to cancel the ongoing transaction.
+  - rule: Cancel active transaction (topup)
+    condition:
+      - slot_was_set:
+          - transaction_type: topup
+      - active_loop: topup_form # This handles denial inside the form
+    steps:
+      - intent: deny
+      - action: utter_cancel
+      - action: action_reset_slots # Reset all slots and active loop
+  - rule: Cancel active transfer transaction
+    condition:
+      - slot_was_set:
+          - transaction_type: transfer
+      - active_loop: transfer_form
+    steps:
+      - intent: deny
+      - action: utter_cancel
+      - action: action_reset_slots
+  - rule: Cancel active remittance transaction
+    condition:
+      - slot_was_set:
+          - transaction_type: remittance
+      - active_loop: remittance_form
+    steps:
+      - intent: deny
+      - action: utter_cancel
+      - action: action_reset_slots
+
+  # Rule for general denial when no transaction is active
+  - rule: General denial when no transaction active
+    condition:
+      - active_loop: null
+      - slot_was_set:
+          - transaction_type: null # Ensure no transaction type is set
+    steps:
+      - intent: deny
+      - action: utter_goodbye # Or a different fallback action if desired
+
+  # ====== TOPUP FLOW ======
+  - rule: Start topup form
+    steps:
+      - intent: topup_wallet
+      - action: topup_form
+      - active_loop: topup_form
+
+  # Rule: Handle topup form submission and set transaction type
+  - rule: Submit topup form and ask for confirmation
+    condition:
+      - active_loop: topup_form
+    steps:
+      - action: topup_form
+      - active_loop: null # Form is now inactive
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_set_transaction_type_topup # Set transaction type AFTER form submission
+      - action: utter_ask_topup_confirm
+
+  # ====== CONTEXT-AWARE CONFIRMATION RULES ======
+  # Modified: Specific confirmation rules for each transaction type
+  - rule: Confirm topup transaction
+    condition:
+      - slot_was_set:
+          - transaction_type: topup
+    steps:
+      - intent: affirm
+      - action: action_execute_topup
+      - action: action_reset_slots # Ensure slots are reset after execution
+
+  # ====== TRANSFER FLOW ======
+  - rule: Start transfer form
+    steps:
+      - intent: transfer_money
+      - action: transfer_form
+      - active_loop: transfer_form
+
+  # Rule: Handle transfer form submission and set transaction type
+  - rule: Submit transfer form and ask for confirmation
+    condition:
+      - active_loop: transfer_form
+    steps:
+      - action: transfer_form
+      - active_loop: null # Form is now inactive
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_set_transaction_type_transfer # Set transaction type AFTER form submission
+      - action: utter_ask_transfer_confirm
+
+  - rule: Confirm transfer transaction
+    condition:
+      - slot_was_set:
+          - transaction_type: transfer
+    steps:
+      - intent: affirm
+      - action: action_execute_transfer
+      - action: action_reset_slots # Ensure slots are reset after execution
+
+  # ====== REMITTANCE FLOW ======
+  - rule: Start remittance form
+    steps:
+      - intent: remittance
+      - action: remittance_form
+      - active_loop: remittance_form
+
+  # Rule: Handle remittance form submission, calculate conversion, and set transaction type
+  - rule: Submit remittance form, calculate conversion, and ask for confirmation
+    condition:
+      - active_loop: remittance_form
+    steps:
+      - action: remittance_form
+      - active_loop: null # Form is now inactive
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_calculate_conversion # Calculate conversion after form submission
+      - action: action_set_transaction_type_remittance # Set transaction type AFTER form submission
+      - action: utter_remittance_confirm
+
+  - rule: Confirm remittance transaction
+    condition:
+      - slot_was_set:
+          - transaction_type: remittance
+    steps:
+      - intent: affirm
+      - action: action_execute_remittance
+      - action: action_reset_slots # Ensure slots are reset after execution
+
+  # ====== EXCHANGE RATE QUERY ======
+  - rule: Provide exchange rates
+    steps:
+      - intent: request_exchange_rate
+      - action: action_fetch_exchange_rate # Use action to set slots before utter
+      - action: utter_exchange_rate
+      - action: action_reset_slots # Reset after providing info if it's a standalone query
+
+  # ====== HELP HANDLING ======
+  - rule: Handle help requests
+    steps:
+      - intent: ask_help
+      - action: utter_help_topup # Or utter_help_general and then branch
+      - action: action_reset_slots # Reset to allow new flow

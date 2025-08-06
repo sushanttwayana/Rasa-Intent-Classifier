@@ -1,0 +1,282 @@
+# ---------------------------------- domain.yml -----------------
+version: "3.1"
+
+intents:
+  - topup_wallet
+  - transfer_money
+  - affirm
+  - deny
+  - goodbye
+  - ask_help
+  - provide_information
+  - request_status
+  - change_request
+  - remittance
+  - request_exchange_rate
+  - greet
+  - mood_great
+  - mood_unhappy
+  - bot_challenge
+
+entities:
+  - amount
+  - person_name
+  - recipient_type:
+      values:
+        - mobile_wallet
+        - bank_account
+        - own_account
+        - business_account
+        - generic_contact
+        - merchant
+  - currency
+  - payment_method
+  - transaction_reference # Ensure this entity is here if you intend to extract it
+  - target_country
+  - transaction_purpose
+
+synonyms:
+  MYR:
+    - RM
+    - ringgit
+  INR:
+    - Rs
+    - rupees
+  USD:
+    - dollars
+  NPR:
+    - NPR
+    - Nepalese rupees
+  EUR:
+    - EUR
+    - euros
+  GBP:
+    - GBP
+    - pounds
+
+slots:
+  transaction_type:
+    type: categorical
+    values:
+      - topup
+      - transfer
+      - remittance # Added remittance
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: transaction_type # This mapping is generally not needed for internal slot setting by actions
+  amount:
+    type: float
+    influence_conversation: true
+    min_value: 0.01
+    max_value: 1000000
+    mappings:
+      - type: from_entity
+        entity: amount
+  recipient_name:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: person_name
+  recipient_type:
+    type: categorical
+    values:
+      - mobile_wallet
+      - bank_account
+      - own_account
+      - business_account
+      - generic_contact
+      - merchant
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: recipient_type
+  currency:
+    type: categorical
+    values:
+      - MYR
+      - INR
+      - USD
+      - EUR
+      - GBP
+    initial_value: "MYR"
+    mappings:
+      - type: from_entity
+        entity: currency
+  payment_method:
+    type: categorical
+    values:
+      - wallet
+      - bank_transfer
+      - debit_card
+      - credit_card
+      - upi
+    mappings:
+      - type: from_entity
+        entity: payment_method
+  target_country:
+    type: categorical
+    values:
+      - Nepal
+      - India
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: target_country
+  converted_amount:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+  transaction_purpose:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: transaction_purpose
+  exchange_rate:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+  remittance_fee:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+  # Add transaction_reference slot
+  transaction_reference:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom # Set by action, not from entity
+
+responses:
+  utter_ask_topup_confirm:
+    - text: "Please confirm: You want to top up {amount} {currency} to {recipient_name}'s {recipient_type}. Is this correct?"
+      buttons:
+        - title: "Yes, proceed"
+          payload: "/affirm"
+        - title: "No, cancel"
+          payload: "/deny"
+  utter_ask_transfer_confirm:
+    - text: "Please verify: Transfer {amount} {currency} to {recipient_name}'s {recipient_type} via {payment_method}. Should I proceed?"
+      buttons:
+        - title: "Confirm transfer"
+          payload: "/affirm"
+        - title: "Cancel transaction"
+          payload: "/deny"
+  utter_topup_success:
+    - text: "Success! {amount} {currency} has been added to {recipient_name}'s {recipient_type}. Transaction ID: {transaction_reference}"
+    - text: "Top-up completed! {amount} {currency} is now available in {recipient_name}'s {recipient_type}. Reference: {transaction_reference}"
+  utter_transfer_success:
+    - text: "Transfer successful! {amount} {currency} sent to {recipient_name}'s {recipient_type}. Transaction ID: {transaction_reference}"
+    - text: "The amount of {amount} {currency} has been transferred to {recipient_name}'s {recipient_type}. Reference number: {transaction_reference}"
+  utter_remittance_success:
+    - text: "Remittance successful! {amount} MYR ({converted_amount} NPR) sent to {recipient_name} in {target_country}. Transaction ID: {transaction_reference}"
+    - text: "Successfully remitted {amount} MYR ({converted_amount} NPR) to {recipient_name}. Reference: {transaction_reference}"
+  utter_cancel:
+    - text: "The transaction has been cancelled. No changes were made."
+    - text: "Action cancelled as requested. Let me know if you need anything else."
+  utter_goodbye:
+    - text: "Goodbye! Have a wonderful day."
+    - text: "Thank you for using our service. See you next time!"
+  utter_did_not_understand:
+    - text: "I'm not sure I understood that. Could you please rephrase?"
+    - text: "Apologies, I didn't catch that. Can you try saying it differently?"
+  utter_ask_amount:
+    - text: "How much would you like to {transaction_type}?"
+    - text: "What amount should I {transaction_type}?"
+  utter_ask_recipient:
+    - text: "Who should receive this {transaction_type}? Please provide name or account details."
+    - text: "Where should I send this {transaction_type}? You can say: 'to John' or 'to my savings account'"
+  utter_ask_currency:
+    - text: "Which currency should be used for this transaction? (Current default: {currency})"
+    - text: "Please specify currency: INR, USD, EUR, or GBP?"
+  utter_ask_payment_method:
+    - text: "How would you like to complete this {transaction_type}? (Wallet, Bank Transfer, UPI, etc.)"
+  utter_ask_transaction_purpose:
+    - text: "What is the purpose of this transaction?"
+    - text: "Please specify the reason for this {transaction_type}."
+  utter_insufficient_funds:
+    - text: "Your available balance is {available_balance} {currency}. This is insufficient for the requested transaction."
+  utter_transaction_limit:
+    - text: "Note: The maximum {transaction_type} amount is {max_amount} {currency} per transaction."
+  utter_help_topup:
+    - text: "To top up a wallet, you can say: 'Add 500 to my Paytm' or 'Top up John's wallet with 1000 rupees'"
+  utter_help_transfer:
+    - text: "To transfer money, try: 'Send 2000 to account 12345' or 'Transfer 500 to my sister'"
+  utter_exchange_rate:
+    - text: "The current exchange rate to {target_country} is {exchange_rate}. The fee is {remittance_fee} MYR."
+    - text: "For {target_country}, the exchange rate is {exchange_rate} with a {remittance_fee} MYR fee."
+  utter_remittance_confirm:
+    - text: "Please confirm: Remit {amount} MYR ({converted_amount} NPR) to {recipient_name} in {target_country}?"
+      buttons:
+        - title: "Yes, proceed"
+          payload: "/affirm"
+        - title: "No, cancel"
+          payload: "/deny"
+  utter_greet:
+    - text: "Hello! How can I assist you today?"
+    - text: "Hi there! Ready to help with your transactions."
+  utter_happy:
+    - text: "Great to hear you're doing well!"
+    - text: "Awesome, let's make your day even better!"
+  utter_cheer_up:
+    - text: "I'm sorry to hear that. Maybe I can help with a transaction or answer a question?"
+    - text: "Let's turn that frown upside down! Want to top up or transfer some funds?"
+  utter_did_that_help:
+    - text: "Did that help cheer you up?"
+    - text: "Feeling a bit better now?"
+  utter_iamabot:
+    - text: "I'm a helpful AI assistant here to assist with your transactions!"
+    - text: "Yes, I'm a bot, but a super helpful one! What's up?"
+
+session_config:
+  session_expiration_time: 30
+  carry_over_slots_to_new_session: false
+
+forms:
+  topup_form:
+    required_slots:
+      - amount
+      - recipient_name
+      - recipient_type
+      - payment_method
+  transfer_form:
+    required_slots:
+      - amount
+      - currency
+      - recipient_name
+      - recipient_type
+      - payment_method
+      - transaction_purpose
+  remittance_form:
+    required_slots:
+      - amount
+      - target_country
+      - recipient_name
+      - recipient_type
+      - payment_method
+      - transaction_purpose
+
+
+actions:
+  - action_topup_wallet # Not found in actions.py
+  - action_transfer_money # Not found in actions.py
+  - action_send_remittance # Not found in actions.py
+  - action_get_exchange_rate # Not found in actions.py
+  - action_validate_topup_form
+  - action_validate_transfer_form
+  - action_validate_remittance_form
+  - action_execute_topup
+  - action_execute_transfer
+  - action_execute_remittance
+  - action_calculate_conversion
+  - action_fetch_exchange_rate
+  - action_reset_slots
+  - action_session_start
+  - action_set_transaction_type_topup
+  - action_set_transaction_type_transfer
+  - action_set_transaction_type_remittance

@@ -1,0 +1,158 @@
+# ------------------stories.yml-----------------------
+version: "3.1"
+
+stories:
+
+- story: happy path
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: mood_great
+  - action: utter_happy
+  - action: action_listen
+
+- story: sad path 1
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: mood_unhappy
+  - action: utter_cheer_up
+  - action: utter_did_that_help
+  - intent: affirm
+  - action: utter_happy
+  - action: action_listen
+
+- story: sad path 2
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: mood_unhappy
+  - action: utter_cheer_up
+  - action: utter_did_that_help
+  - intent: deny
+  - action: utter_goodbye
+  - action: action_listen
+
+# ====== COMPLETE TOPUP STORY ======
+- story: Happy path - Topup with all details
+  steps:
+    - intent: topup_wallet
+      entities:
+        - amount: "100"
+        - person_name: "Ali"
+        - recipient_type: "mobile_wallet"
+    - action: topup_form
+    - active_loop: null # Form completes immediately as all slots are provided
+    - slot_was_set:
+        - requested_slot: null
+    # IMPORTANT: The following actions must match the rule 'Submit topup form and ask for confirmation'
+    - action: action_set_transaction_type_topup # This action comes from the rule
+    - action: utter_ask_topup_confirm           # This action comes from the rule
+    - intent: affirm
+    - action: action_execute_topup
+    - action: utter_topup_success
+    - action: action_listen # action_reset_slots handles this implicitly, but explicit listen is harmless
+
+# ====== INCOMPLETE TRANSFER STORY ======
+- story: Transfer with missing recipient
+  steps:
+    - intent: transfer_money
+      entities:
+        - amount: "200"
+        - currency: "MYR"
+    - action: transfer_form
+    - active_loop: transfer_form
+    - slot_was_set:
+        - requested_slot: recipient_name
+    - intent: provide_information
+      entities:
+        - person_name: "Siti"
+        - recipient_type: "bank_account"
+    - action: transfer_form
+    - active_loop: transfer_form
+    - slot_was_set:
+        - requested_slot: payment_method
+    - intent: provide_information
+      entities:
+        - payment_method: "wallet"
+    - action: transfer_form
+    - active_loop: transfer_form
+    - slot_was_set:
+        - requested_slot: transaction_purpose
+    - intent: provide_information
+      entities:
+        - transaction_purpose: "family support"
+    - action: transfer_form
+    - active_loop: null
+    - slot_was_set:
+        - requested_slot: null
+    # IMPORTANT: The following actions must match the rule 'Submit transfer form and ask for confirmation'
+    - action: action_set_transaction_type_transfer # This action comes from the rule
+    - action: utter_ask_transfer_confirm           # This action comes from the rule
+    - intent: affirm
+    - action: action_execute_transfer
+    - action: utter_transfer_success
+    - action: action_listen
+
+# ====== REMITTANCE TO NEPAL ======
+- story: Cross-border remittance with NPR conversion
+  steps:
+    - intent: remittance
+      entities:
+        - amount: "500"
+        - target_country: "Nepal"
+    - action: remittance_form
+    - active_loop: remittance_form
+    - slot_was_set:
+        - requested_slot: recipient_name
+    - intent: provide_information
+      entities:
+        - person_name: "Ramesh"
+    - action: remittance_form
+    - active_loop: remittance_form
+    - slot_was_set:
+        - requested_slot: recipient_type
+    - intent: provide_information
+      entities:
+        - recipient_type: "mobile_wallet"
+    - action: remittance_form
+    - active_loop: remittance_form
+    - slot_was_set:
+        - requested_slot: payment_method
+    - intent: provide_information
+      entities:
+        - payment_method: "bank_transfer"
+    - action: remittance_form
+    - active_loop: remittance_form
+    - slot_was_set:
+        - requested_slot: transaction_purpose
+    - intent: provide_information
+      entities:
+        - transaction_purpose: "education"
+    - action: remittance_form
+    - active_loop: null
+    - slot_was_set:
+        - requested_slot: null
+    # IMPORTANT: The following actions must match the rule 'Submit remittance form, calculate conversion, and ask for confirmation'
+    - action: action_calculate_conversion          # This action comes from the rule
+    - action: action_set_transaction_type_remittance # This action comes from the rule
+    - action: utter_remittance_confirm            # This action comes from the rule
+    - intent: affirm
+    - action: action_execute_remittance
+    - action: utter_remittance_success
+    - action: action_listen
+
+# ====== DENIAL HANDLING ======
+- story: User cancels mid-transaction
+  steps:
+    - intent: topup_wallet
+      entities:
+        - amount: "150"
+    - action: topup_form
+    - active_loop: topup_form
+    - slot_was_set:
+        - requested_slot: recipient_name
+    - intent: deny
+    - action: utter_cancel
+    - action: action_reset_slots
+    - action: action_listen

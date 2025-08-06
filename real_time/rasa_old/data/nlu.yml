@@ -1,0 +1,249 @@
+# nlu.yml
+
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - hello there
+    - good morning
+    - good evening
+    - moin
+    - hey there
+    - let's go
+    - hey dude
+    - goodmorning
+    - goodevening
+    - good afternoon
+    - how are you 
+    - how do you do.
+
+- intent: goodbye
+  examples: |
+    - cu
+    - good by
+    - cee you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - bye bye
+    - see you later
+
+- intent: affirm
+  examples: |
+    - yes
+    - y
+    - indeed
+    - of course
+    - that sounds good
+    - correct
+
+- intent: deny
+  examples: |
+    - no
+    - n
+    - never
+    - I don't think so
+    - don't like that
+    - no way
+    - not really
+
+- intent: mood_great
+  examples: |
+    - perfect
+    - great
+    - amazing
+    - feeling like a king
+    - wonderful
+    - I am feeling very good
+    - I am great
+    - I am amazing
+    - I am going to save the world
+    - super stoked
+    - extremely good
+    - so so perfect
+    - so good
+    - so perfect
+
+- intent: mood_unhappy
+  examples: |
+    - my day was horrible
+    - I am sad
+    - I don't feel very well
+    - I am disappointed
+    - super sad
+    - I'm so sad
+    - sad
+    - very sad
+    - unhappy
+    - not good
+    - not very good
+    - extremly sad
+    - so saad
+    - so sad
+
+- intent: bot_challenge
+  examples: |
+    - are you a bot?
+    - are you a human?
+    - am I talking to a bot?
+    - am I talking to a human?
+    - tell me about yourself.
+    - can you behave like human?
+    - who are you?
+
+- intent: topup_wallet
+  examples: |
+    - I want to top up [50](amount) rupees into [Mark's](person_name) wallet
+    - [Topup](amount) [100](amount) to [Sarah's](person_name) account
+    - [Add 200 Rs](amount) to [my mobile](recipient_type:mobile_wallet) wallet
+    - Can you please [recharge my phone](recipient_type:mobile_wallet) with [Rs 500](amount)?
+    - [Top up](amount) [fifty](amount) to [John](person_name)
+    - [Recharge](amount) [20](amount) for [Mom](person_name)
+    - put [100](amount) in [my wallet](recipient_type:mobile_wallet)
+    - I need to add [300](amount) to [my digital wallet](recipient_type:mobile_wallet)
+    - Please credit [250](amount) to [my account](recipient_type:own_account)
+    - Load [75 dollars](amount) into [my son's](person_name) wallet
+    - Can I deposit [1500](amount) to [my Paytm](recipient_type:mobile_wallet)?
+    - Need to [replenish](amount) [200](amount) in [the company wallet](recipient_type:business_account)
+    - [Wallet topup](amount) of [1000](amount) for [employee ID 123](person_name)
+    - [Fund](amount) [my account](recipient_type:own_account) with [5000](amount)
+    - I'd like to [add money](amount) to [my wife's](person_name) wallet - [350](amount)
+    - [Refill](amount) [my prepaid account](recipient_type:mobile_wallet) with [100](amount)
+    - Make a [wallet deposit](amount) of [750](amount) for [customer 456](person_name)
+    - [Increase balance](amount) by [1200](amount) in [my account](recipient_type:own_account)
+    - [Charge up](amount) [my mobile wallet](recipient_type:mobile_wallet) with [200](amount)
+    - [Put in](amount) [another 50](amount) to [team account](recipient_type:business_account)
+    - Top up [RM50](amount) into [Aman's](person_name) wallet
+    - Add [NPR 1000](amount) to my [eSewa](recipient_type:mobile_wallet) account
+    - Recharge [my Khalti](recipient_type:mobile_wallet) wallet with [300 rupees](amount)
+    - Please topup [200](amount) for [Dad](person_name)
+    - I want to refill [my salary wallet](recipient_type:business_account) with [Rs 800](amount)
+    - Can you add [700](amount) into [Nita's](person_name) Paytm?
+    - Load [RM75](amount) into [my Touch n Go](recipient_type:mobile_wallet) wallet
+    - Add balance of [NPR 500](amount) into [college fund account](recipient_type:generic_contact)
+    - Refill [my JazzCash](recipient_type:mobile_wallet) wallet with [Rs 1000](amount)
+    - Load [100 rupees](amount) in [Ramesh's](person_name) mobile wallet
+    - Put [50 ringgit](amount) into [business expenses wallet](recipient_type:business_account)
+    - Can I add [350](amount) to [Ankit's](person_name) digital wallet?
+    - Add funds of [250](amount) into [my work wallet](recipient_type:business_account)
+    - [Deposit](amount) [RM20](amount) to [Mum's](person_name) e-wallet
+    - Recharge my wallet with [Rs 150](amount)
+    - Fund [my PayPal wallet](recipient_type:mobile_wallet) with [3000 rupees](amount)
+    - Please add [NPR 999](amount) into [Khalti](recipient_type:mobile_wallet)
+    - Load [200 rupees](amount) to my [gaming wallet](recipient_type:business_account)
+    - Add [RM30](amount) to [my brother's](person_name) e-wallet
+    - Put money worth [500 rupees](amount) in my [phone wallet](recipient_type:mobile_wallet)
+    - Top up [100](amount) [USD](currency) into [John's](person_name) wallet
+    - Add [200](amount) [EUR](currency) to [my digital wallet](recipient_type:mobile_wallet)
+    - Recharge [50](amount) [GBP](currency) to [my account](recipient_type:own_account
+
+- intent: transfer_money
+  examples: |
+    - I want to transfer [1000](amount) rupees to [David](person_name)
+    - [Send](amount) [500](amount) to [Jane's](person_name) bank account
+    - [Transfer](amount) [2000](amount) from my savings to [current account](recipient_type:own_account)
+    - Can I [send](amount) [two thousand](amount) to [my friend](recipient_type:generic_contact)?
+    - [Move](amount) [300](amount) to [my other account](recipient_type:own_account)
+    - [Transfer money](amount) to [Michael](person_name) [500](amount)
+    - [Fund transfer](amount) of [100](amount) to [Rachel](person_name)
+    - Please [wire](amount) [1500](amount) to [account number 12345](recipient_type:bank_account)
+    - I need to [send funds](amount) to [my landlord](recipient_type:generic_contact) - [2000](amount)
+    - [Make a payment](amount) of [750](amount) to [ABC Suppliers](recipient_type:business_account)
+    - [Shift](amount) [500](amount) from [checking to savings](recipient_type:own_account)
+    - [Pay](amount) [the invoice](recipient_type:business_account) [1200](amount)
+    - [Remit](amount) [300 dollars](amount) to [my sister](person_name) overseas
+    - [Forward](amount) [250](amount) to [account ending 7890](recipient_type:bank_account)
+    - [Dispatch](amount) [1800](amount) to [vendor](recipient_type:business_account)
+    - I'd like to [electronically send](amount) [400](amount) to [my brother](person_name)
+    - [Initiate transfer](amount) of [3500](amount) to [mortgage account](recipient_type:bank_account)
+    - [Route](amount) [150](amount) to [charity fund](recipient_type:generic_contact)
+    - [Execute payment](amount) of [900](amount) to [contractor](recipient_type:business_account)
+    - [Transmit](amount) [600](amount) to [college fund](recipient_type:generic_contact)
+    - Transfer [RM200](amount) to [Ashok](person_name)
+    - I need to send [NPR 5000](amount) to [my mother](person_name) in Bhaktapur
+    - Send [500 ringgit](amount) to [my wife's](person_name) account in Nepal
+    - Please remit [USD 100](amount) to [Rina](person_name) in the US
+    - Send [RM80](amount) to [Maya](person_name) via bank
+    - Wire [Rs 2500](amount) to [my school account](recipient_type:bank_account)
+    - I'd like to send [money](amount) to [Dipesh](person_name) – [1000 rupees](amount)
+    - Transfer [600](amount) from [main account to savings](recipient_type:own_account)
+    - Move [750](amount) to [my SBI](recipient_type:bank_account)
+    - Please send [RM300](amount) to [Hari's](person_name) Maybank account
+    - Remit [NPR 12000](amount) from Malaysia to [Anju](person_name) in Nepal
+    - I want to remit [100 dollars](amount) to [my brother](person_name) overseas
+    - Send [2000 rupees](amount) to [the landlord](recipient_type:generic_contact)
+    - Dispatch [money](amount) to [Sita](person_name) – [RM90](amount)
+    - Make an international transfer of [Rs 5000](amount) to [Kiran](person_name)
+    - Can you move [1000 rupees](amount) to my [BOK account](recipient_type:bank_account)?
+    - I'd like to pay [our supplier](recipient_type:business_account) [RM400](amount)
+    - Wire [Rs 7000](amount) to [my second account](recipient_type:own_account)
+    - Transfer [NPR 3000](amount) to [father's account](person_name)
+    - Pay [the remittance](amount) of [RM600](amount) to [Nepal](recipient_type:bank_account)
+    - Transfer [300](amount) [EUR](currency) to [Michael](person_name)
+    - Send [400](amount) [GBP](currency) to [my brother](person_name
+
+- intent: remittance
+  examples: |
+    - I want to send [500](amount) to [Nepal](target_country) for [Rina](person_name)
+    - Remit [1000 rupees](amount) to [India](target_country) for [Sita](person_name)
+    - Send [200](amount) to [my brother](person_name) in [Nepal](target_country)
+    - Transfer [RM300](amount) to [Hari](person_name) in [India](target_country)
+    - Please remit [USD 100](amount) to [Kiran](person_name) in [Nepal](target_country)
+    - Send [Rs 5000](amount) to [Anju](person_name) in [Nepal](target_country)
+    - Remit [100 dollars](amount) to [my sister](person_name) in [India](target_country)
+    - Send [600](amount) [EUR](currency) to [Nepal](target_country) for [Ramesh](person_name)
+    - Remit [200](amount) [GBP](currency) to [India](target_country) for [Priya](person_name)
+
+- intent: ask_help
+  examples: |
+    - help
+    - I need help
+    - can you help me
+    - what can you do
+    - how does this work
+    - I'm confused
+    - guide me
+    - support
+
+- intent: provide_information
+  examples: |
+    - the recipient is [John](person_name)
+    - send it to [my bank account](recipient_type:bank_account)
+    - use [credit card](payment_method)
+    - the purpose is [family support](transaction_purpose)
+    - it's for [business](transaction_purpose)
+    - via [wallet](payment_method)
+    - to [mobile wallet](recipient_type:mobile_wallet)
+
+- intent: request_status
+  examples: |
+    - what's the status of my transaction
+    - check my last transfer
+    - transaction status
+    - where is my money
+    - has it gone through
+    - is it completed
+
+- intent: change_request
+  examples: |
+    - I want to change the amount
+    - modify the recipient
+    - change payment method
+    - update the details
+    - I made a mistake
+    - wrong information
+
+- intent: request_exchange_rate
+  examples: |
+    - what's the exchange rate
+    - current rate to [Nepal](target_country)
+    - exchange rate for [India](target_country)
+    - how much is [100](amount) in [NPR](currency)
+    - conversion rate
+    - what's the rate today

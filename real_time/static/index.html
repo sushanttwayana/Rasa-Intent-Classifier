@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real-time Voice Command Transcription</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Real-time Voice Command Transcription</h1>
+        <div class="controls">
+            <button id="startBtn" class="start">Start Listening</button>
+            <button id="stopBtn" class="stop" disabled>Stop Listening</button>
+        </div>
+        <div id="status" class="status ready">Ready</div>
+        <div class="transcription-area">
+            <h3>Interim Transcription:</h3>
+            <div id="interimTranscription"></div>
+            <h3>Final Command:</h3>
+            <div id="finalTranscription">No command received yet.</div>
+        </div>
+        <div class="info-panel">
+            <h3>Instructions:</h3>
+            <ul>
+                <li>Click "Start Listening" to begin recording</li>
+                <li>Speak clearly into your microphone</li>
+                <li>You'll see interim results as you speak</li>
+                <li>Click "Stop Listening" to get the final transcription</li>
+            </ul>
+        </div>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>
